@@ -61,8 +61,22 @@ def add_fourth_iterator(cls):
 
 @add_fourth_iterator
 class SchoolClass:
+    _instance = None
+
+    def __new__(cls):
+        if cls._instance is None:
+            cls._instance = super().__new__(cls)
+        return cls._instance
+
     def __init__(self):
-        self.students = []
+        if not hasattr(self, 'students'):  # Pour éviter la réinitialisation
+            self.students = []
+    
+    @classmethod
+    def get_instance(cls):
+        if cls._instance is None:
+            cls._instance = cls()
+        return cls._instance
     
     def __iter__(self):
         return StudentIterator(self.students)
@@ -115,7 +129,7 @@ class SchoolClass:
             print(f"  {s.name}: {s.grades[3]}")
 
 
-school_class = SchoolClass()
+school_class = SchoolClass.get_instance()
 school_class.add_student(Student('J', 10, 12, 13))
 school_class.add_student(Student('A', 8, 2, 17))
 school_class.add_student(Student('V', 9, 14, 14))
@@ -143,3 +157,7 @@ for student in school_class.iter_matter_3():
 print("\n--- Itération Matière 4 ---")
 for student in school_class.iter_matter_4():
     print(f"  {student.name}: {student.grades[3]}")
+
+# Démonstration du singleton
+another_instance = SchoolClass.get_instance()
+print(f"\nInstance unique : {school_class is another_instance}")
