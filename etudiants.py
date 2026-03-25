@@ -28,6 +28,11 @@ class SchoolClass:
         for s in sorted_students:
             print(f"  {s.name}: {s.average():.2f}")
 
+    def rank_matter_1(self):
+        print("\n--- Classement en Matière 1 (ordre décroissant) ---")
+        sorted_students = sorted(self.students, key=lambda s: s.grades[0], reverse=True)
+        for s in sorted_students:
+            print(f"  {s.name}: {s.grades[0]}")
 
 
 school_class = SchoolClass()
@@ -37,3 +42,5 @@ school_class.add_student(Student('V', 9, 14, 14))
 
 school_class.display_by_subject()
 school_class.display_averages()
+school_class.rank_matter_1()
+
