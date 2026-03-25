@@ -34,6 +34,17 @@ class SchoolClass:
         for s in sorted_students:
             print(f"  {s.name}: {s.grades[0]}")
 
+    def rank_matter_2(self):
+        print("\n--- Classement en Matière 2 (ordre décroissant) ---")
+        sorted_students = sorted(self.students, key=lambda s: s.grades[1], reverse=True)
+        for s in sorted_students:
+            print(f"  {s.name}: {s.grades[1]}")
+
+    def rank_matter_3(self):
+        print("\n--- Classement en Matière 3 (ordre décroissant) ---")
+        sorted_students = sorted(self.students, key=lambda s: s.grades[2], reverse=True)
+        for s in sorted_students:
+            print(f"  {s.name}: {s.grades[2]}")
 
 school_class = SchoolClass()
 school_class.add_student(Student('J', 10, 12, 13))
@@ -43,4 +54,6 @@ school_class.add_student(Student('V', 9, 14, 14))
 school_class.display_by_subject()
 school_class.display_averages()
 school_class.rank_matter_1()
+school_class.rank_matter_2()
+school_class.rank_matter_3()
 
