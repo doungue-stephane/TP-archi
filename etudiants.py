@@ -1,3 +1,6 @@
+from collections.abc import Iterable, Iterator
+
+
 class Student:
     def __init__(self, name, grade1, grade2, grade3):
         self.name = name
@@ -7,9 +10,27 @@ class Student:
         return sum(self.grades) / len(self.grades)
 
 
+class StudentIterator(Iterator):
+    def __init__(self, students):
+        # Trier du meilleur au plus mauvais selon la matière 1
+        self._students = sorted(students, key=lambda s: s.grades[0], reverse=True)
+        self._index = 0
+
+    def __next__(self):
+        if self._index >= len(self._students):
+            raise StopIteration
+        student = self._students[self._index]
+        self._index += 1
+        return student
+
+
 class SchoolClass:
     def __init__(self):
         self.students = []
+    
+    def __iter__(self):
+        return StudentIterator(self.students)
+
 
     def add_student(self, student):
         self.students.append(student)
@@ -57,3 +78,6 @@ school_class.rank_matter_1()
 school_class.rank_matter_2()
 school_class.rank_matter_3()
 
+print("\n--- Itération via __iter__ (classement Matière 1) ---")
+for student in school_class:
+    print(f"  {student.name}: {student.grades[0]}")
