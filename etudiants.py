@@ -1,6 +1,17 @@
 from collections.abc import Iterable, Iterator
 
+def add_fourth_matter(cls):
+    original_init = cls.__init__
 
+    def new_init(self, name, grade1, grade2, grade3, grade4=0):
+        original_init(self, name, grade1, grade2, grade3)
+        self.grades.append(grade4)
+
+    cls.__init__ = new_init
+    return cls
+
+
+@add_fourth_matter
 class Student:
     def __init__(self, name, grade1, grade2, grade3):
         self.name = name
@@ -11,9 +22,9 @@ class Student:
 
 
 class StudentIterator(Iterator):
-    def __init__(self, students):
-        # Trier du meilleur au plus mauvais selon la matière 1
-        self._students = sorted(students, key=lambda s: s.grades[0], reverse=True)
+    def __init__(self, students, matter_index=0):
+        # Trier du meilleur au plus mauvais selon la matière spécifiée
+        self._students = sorted(students, key=lambda s: s.grades[matter_index], reverse=True)
         self._index = 0
 
     def __next__(self):
@@ -37,6 +48,10 @@ class StudentIteratorMatter3(StudentIterator):
     def __init__(self, students):
         super().__init__(students, matter_index=2)
 
+class StudentIteratorMatter4(StudentIterator):
+    def __init__(self, students):
+        super().__init__(students, matter_index=3)
+
 
 class SchoolClass:
     def __init__(self):
@@ -51,11 +66,14 @@ class SchoolClass:
     def iter_matter_3(self):
         return StudentIteratorMatter3(self.students)
 
+    def iter_matter_4(self):
+        return StudentIteratorMatter4(self.students)
+
     def add_student(self, student):
         self.students.append(student)
 
     def display_by_subject(self):
-        subjects = ["Matière 1", "Matière 2", "Matière 3"]
+        subjects = ["Matière 1", "Matière 2", "Matière 3", "Matière 4"]
         for i, subject in enumerate(subjects):
             print(f"\n--- Classement en {subject} ---")
             sorted_students = sorted(self.students, key=lambda s: s.grades[i], reverse=True)
@@ -85,6 +103,13 @@ class SchoolClass:
         sorted_students = sorted(self.students, key=lambda s: s.grades[2], reverse=True)
         for s in sorted_students:
             print(f"  {s.name}: {s.grades[2]}")
+    
+    def rank_matter_4(self):
+        print("\n--- Classement en Matière 4 (ordre décroissant) ---")
+        sorted_students = sorted(self.students, key=lambda s: s.grades[3], reverse=True)
+        for s in sorted_students:
+            print(f"  {s.name}: {s.grades[3]}")
+
 
 school_class = SchoolClass()
 school_class.add_student(Student('J', 10, 12, 13))
@@ -96,6 +121,8 @@ school_class.display_averages()
 school_class.rank_matter_1()
 school_class.rank_matter_2()
 school_class.rank_matter_3()
+school_class.rank_matter_4()
+
 
 print("\n--- Itération via __iter__ (classement Matière 1) ---")
 for student in school_class:
@@ -108,3 +135,7 @@ for student in school_class.iter_matter_2():
 print("\n--- Itération Matière 3 ---")
 for student in school_class.iter_matter_3():
     print(f"  {student.name}: {student.grades[2]}")
+
+print("\n--- Itération Matière 4 ---")
+for student in school_class.iter_matter_4():
+    print(f"  {student.name}: {student.grades[3]}")
