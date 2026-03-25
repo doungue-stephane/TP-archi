@@ -23,6 +23,20 @@ class StudentIterator(Iterator):
         self._index += 1
         return student
 
+class StudentIteratorMatter1(StudentIterator):
+    def __init__(self, students):
+        super().__init__(students, matter_index=0)
+
+
+class StudentIteratorMatter2(StudentIterator):
+    def __init__(self, students):
+        super().__init__(students, matter_index=1)
+
+
+class StudentIteratorMatter3(StudentIterator):
+    def __init__(self, students):
+        super().__init__(students, matter_index=2)
+
 
 class SchoolClass:
     def __init__(self):
@@ -30,7 +44,12 @@ class SchoolClass:
     
     def __iter__(self):
         return StudentIterator(self.students)
+    
+    def iter_matter_2(self):
+        return StudentIteratorMatter2(self.students)
 
+    def iter_matter_3(self):
+        return StudentIteratorMatter3(self.students)
 
     def add_student(self, student):
         self.students.append(student)
@@ -81,3 +100,11 @@ school_class.rank_matter_3()
 print("\n--- Itération via __iter__ (classement Matière 1) ---")
 for student in school_class:
     print(f"  {student.name}: {student.grades[0]}")
+
+print("\n--- Itération Matière 2 ---")
+for student in school_class.iter_matter_2():
+    print(f"  {student.name}: {student.grades[1]}")
+
+print("\n--- Itération Matière 3 ---")
+for student in school_class.iter_matter_3():
+    print(f"  {student.name}: {student.grades[2]}")
