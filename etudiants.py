@@ -28,3 +28,12 @@ class SchoolClass:
         for s in sorted_students:
             print(f"  {s.name}: {s.average():.2f}")
 
+
+
+school_class = SchoolClass()
+school_class.add_student(Student('J', 10, 12, 13))
+school_class.add_student(Student('A', 8, 2, 17))
+school_class.add_student(Student('V', 9, 14, 14))
+
+school_class.display_by_subject()
+school_class.display_averages()
