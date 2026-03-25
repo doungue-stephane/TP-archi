@@ -52,7 +52,14 @@ class StudentIteratorMatter4(StudentIterator):
     def __init__(self, students):
         super().__init__(students, matter_index=3)
 
+def add_fourth_iterator(cls):
+    def iter_matter_4(self):
+        return StudentIteratorMatter4(self.students)
+    cls.iter_matter_4 = iter_matter_4
+    return cls
 
+
+@add_fourth_iterator
 class SchoolClass:
     def __init__(self):
         self.students = []
@@ -65,9 +72,6 @@ class SchoolClass:
 
     def iter_matter_3(self):
         return StudentIteratorMatter3(self.students)
-
-    def iter_matter_4(self):
-        return StudentIteratorMatter4(self.students)
 
     def add_student(self, student):
         self.students.append(student)
